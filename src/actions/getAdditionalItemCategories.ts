@@ -9,7 +9,16 @@ export default async function getAdditionalItemCategories() {
         }
 
 
-        const additionalItemCategory = await prismadb.additionalItemCategory.findMany()
+        const additionalItemCategory = await prismadb.additionalItemCategory.findMany({
+            include: {
+                products: {
+                    include: {
+                        images: true,
+                    }
+                },
+                additionalItems: true
+            }
+        })
 
         if (!additionalItemCategory) {
             return []

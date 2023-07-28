@@ -29,7 +29,6 @@ export const CellAction: React.FC<CellActionProps> = ({
             toast({
                 description: "Produto excluido.",
             });
-            router.back()
             setOpen(false);
         } catch(error) {
             toast({

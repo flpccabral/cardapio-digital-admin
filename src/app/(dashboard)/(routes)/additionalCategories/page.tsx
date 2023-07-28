@@ -1,21 +1,9 @@
-import prismadb from "@/lib/prismadb";
 import { AdditionalCategoriesClient } from "./components/client";
 import { AdditionalCategoryColumn } from "./components/columns";
+import getAdditionalItemCategories from "@/actions/getAdditionalItemCategories";
 
-const ProductsPage = async () => {
-    const additionalCategories = await prismadb.additionalItemCategory.findMany({
-        orderBy: {
-            createdAt: "desc"
-        },
-        include: {
-            products: {
-                include: {
-                    images: true,
-                }
-            },
-            additionalItems: true
-        }
-    })   
+const AdditionalCategoriesPage = async () => {
+    const additionalCategories = await getAdditionalItemCategories()
     
     const formattedProducts: AdditionalCategoryColumn[] = additionalCategories.map((item) => ({
         id: item.id,
@@ -32,4 +20,4 @@ const ProductsPage = async () => {
     )
 }
 
-export default ProductsPage;
+export default AdditionalCategoriesPage;
