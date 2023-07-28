@@ -1,0 +1,106 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  email String @unique
+  emailVerified DateTime?
+  hashedPassword String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Restaurant {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  name          String      @default("teste")
+  logo          String?
+  phone         String?
+  whatsapp      String      @default("21999999999")
+  email         String      @default("teste123@gmail.com")
+  colorHeader   String      @default("fff")
+  colorDetails  String      @default("fff")
+  address       Address?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Address {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  streetAddress String      @default("rua joao")
+  number        Int         @default(123)
+  complement    String?
+  neighborhood  String      @default("Vila da penha")
+  city          String      @default("rio de janeiro")
+  state         String      @default("rio de janeiro")
+  zipCode       Int         @default(21230712)
+  country       String      @default("Brasil")
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  restaurant    Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  restaurantId  String      @db.ObjectId @unique
+}
+
+model Category {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  products      Product[]
+}
+
+model Product {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  description   String? 
+  price         Float
+  images        Image[]
+  status        Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  category      Category    @relation(fields: [categoryId], references: [id])
+  categoryId    String      @db.ObjectId
+  additionalItemCategories  AdditionalItemCategory[] @relation(fields: [additionalItemCategoryIds], references: [id])
+  additionalItemCategoryIds String[]  @db.ObjectId
+}
+
+model Image {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  productId     String      @db.ObjectId
+  product       Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url           String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model AdditionalItemCategory {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  description   String
+  maxQtdItems   Int         @default(0)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  products      Product[]   @relation(fields: [productIds], references: [id])
+  productIds    String[]    @db.ObjectId
+  additionalItems           AdditionalItem[]
+}
+
+model AdditionalItem {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  price         Float
+  status        Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  additionalItemCategory    AdditionalItemCategory    @relation(fields: [additionalItemCategoryId], references: [id])
+  additionalItemCategoryId  String                    @db.ObjectId
+}
