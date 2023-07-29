@@ -9,7 +9,11 @@ export default async function getAdditionalItems() {
         }
 
 
-        const additionalItems = await prismadb.additionalItem.findMany()
+        const additionalItems = await prismadb.additionalItem.findMany({
+            include: {
+                additionalItemCategory: true
+            }
+        })
 
         if (!additionalItems) {
             return []

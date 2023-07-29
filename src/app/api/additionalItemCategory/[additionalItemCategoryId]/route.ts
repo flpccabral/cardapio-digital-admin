@@ -37,7 +37,10 @@ export async function PATCH(
         const {
             name,
             description,
-            maxQtdItems
+            maxQtdItems,
+            status,
+            productIds,
+            additionalItemsIds
         } = body;
 
         if (!params.additionalItemCategoryId) {
@@ -56,18 +59,73 @@ export async function PATCH(
             return new NextResponse("Maximum amount of itens is required", { status: 400 })
         }
 
-        const additionalItemCategory = await prismadb.additionalItemCategory.updateMany({
+        const additionalItemCategory = await prismadb.additionalItemCategory.findUnique({
+            where: {
+                id: params.additionalItemCategoryId,
+            }
+        })
+
+        if (additionalItemCategory?.productIds.length) {
+            const products = await prismadb.product.findMany({
+                where: {
+                    id: {
+                        in: additionalItemCategory.productIds
+                    }
+                }
+            })
+    
+            for (const product of products) {
+                const additionalItemCategoryIds = product.additionalItemCategoryIds.filter((additionalItemCategoryId) => additionalItemCategoryId !== params.additionalItemCategoryId)
+    
+                await prismadb.product.updateMany({
+                    where: {
+                        id: {
+                            in: additionalItemCategory.productIds
+                        }
+                    },
+                    data: {
+                        additionalItemCategoryIds: {
+                            set: additionalItemCategoryIds
+                        }
+                    }
+                })
+            }
+        }
+
+        const updateAdditionalItemCategory = await prismadb.additionalItemCategory.updateMany({
             where: {
                 id: params.additionalItemCategoryId,
             },
             data: {
                 name,
                 description,
-                maxQtdItems
+                maxQtdItems,
+                status,
+                additionalItemsIds: {
+                    set: additionalItemsIds
+                },
+                productIds: {
+                    set: productIds
+                }
             }
         })
 
-        return NextResponse.json(additionalItemCategory)
+        if (productIds?.length) {
+            await prismadb.product.updateMany({
+                where: {
+                    id: {
+                        in: productIds
+                    }
+                },
+                data: {
+                    additionalItemCategoryIds: {
+                        push: params.additionalItemCategoryId
+                    }
+                }
+            })
+        }
+
+        return NextResponse.json(updateAdditionalItemCategory)
     } catch(error) {
         console.log('ADDITIONAL_ITEM_CATEGORY_PATCH', error);
         return new NextResponse("Internal error", { status: 500 })
@@ -102,7 +160,8 @@ export async function DELETE(
                 id: params.additionalItemCategoryId,
             },
             include: {
-                products: true
+                products: true,
+                additionalItems: true
             }
         })
 
@@ -122,6 +181,33 @@ export async function DELETE(
                     where: {
                         id: {
                             in: deletedadditionalItemCategory.productIds
+                        }
+                    },
+                    data: {
+                        additionalItemCategoryIds: {
+                            set: additionalItemCategoryIds
+                        }
+                    }
+                })
+            }
+        }
+
+        if (deletedadditionalItemCategory.additionalItems?.length) {
+            const additionalItems = await prismadb.additionalItem.findMany({
+                where: {
+                    id: {
+                        in: deletedadditionalItemCategory.additionalItemsIds
+                    }
+                }
+            })
+    
+            for (const additionalItem of additionalItems) {
+                const additionalItemCategoryIds = additionalItem.additionalItemCategoryIds.filter((additionalItemCategoryId) => additionalItemCategoryId !== params.additionalItemCategoryId)
+    
+                await prismadb.additionalItem.updateMany({
+                    where: {
+                        id: {
+                            in: deletedadditionalItemCategory.additionalItemsIds
                         }
                     },
                     data: {

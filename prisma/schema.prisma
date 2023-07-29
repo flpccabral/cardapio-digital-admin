@@ -53,6 +53,7 @@ model Address {
 model Category {
   id            String      @id @default(auto()) @map("_id") @db.ObjectId
   name          String
+  status        Boolean     @default(true)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   products      Product[]
@@ -87,11 +88,13 @@ model AdditionalItemCategory {
   name          String
   description   String
   maxQtdItems   Int         @default(0)
+  status        Boolean     @default(true)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   products      Product[]   @relation(fields: [productIds], references: [id])
   productIds    String[]    @db.ObjectId
-  additionalItems           AdditionalItem[]
+  additionalItems           AdditionalItem[] @relation(fields: [additionalItemsIds], references: [id])
+  additionalItemsIds         String[]                    @db.ObjectId
 }
 
 model AdditionalItem {
@@ -101,6 +104,6 @@ model AdditionalItem {
   status        Boolean     @default(true)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
-  additionalItemCategory    AdditionalItemCategory    @relation(fields: [additionalItemCategoryId], references: [id])
-  additionalItemCategoryId  String                    @db.ObjectId
+  additionalItemCategory    AdditionalItemCategory[]    @relation(fields: [additionalItemCategoryIds], references: [id])
+  additionalItemCategoryIds  String[]                    @db.ObjectId
 }

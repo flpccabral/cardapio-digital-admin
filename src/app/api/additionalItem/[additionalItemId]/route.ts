@@ -34,7 +34,8 @@ export async function PATCH(
         const {
             name,
             price,
-            additionalItemCategoryId
+            status,
+            additionalItemCategoryIds
         } = body;
 
         if (!params.additionalItemId) {
@@ -49,30 +50,72 @@ export async function PATCH(
             return new NextResponse("Price is required", { status: 400 })
         }
 
-        if (additionalItemCategoryId) {
-            const additionalItemCategory = await prismadb.additionalItemCategory.findUnique({
+
+        const additionalItem = await prismadb.additionalItem.findUnique({
+            where: {
+                id: params.additionalItemId,
+            }
+        })
+
+        if (additionalItem?.additionalItemCategoryIds.length) {
+            const additionalItemCategories = await prismadb.additionalItemCategory.findMany({
                 where: {
-                    id: additionalItemCategoryId
+                    id: {
+                        in: additionalItem.additionalItemCategoryIds
+                    }
                 }
             })
     
-            if (!additionalItemCategory) {
-                return new NextResponse("Additional Item Category Id not exist", { status: 404 })
+            for (const additionalItemCategory of additionalItemCategories) {
+                const additionalItemsIds = additionalItemCategory.additionalItemsIds.filter((additionalItemsId) => additionalItemsId !== params.additionalItemId)
+    
+                await prismadb.additionalItemCategory.updateMany({
+                    where: {
+                        id: {
+                            in: additionalItem.additionalItemCategoryIds
+                        }
+                    },
+                    data: {
+                        productIds: {
+                            set: additionalItemsIds
+                        }
+                    }
+                })
             }
         }
 
-        const additionalItem = await prismadb.additionalItem.updateMany({
+
+        const updateAdditionalItem = await prismadb.additionalItem.updateMany({
             where: {
                 id: params.additionalItemId,
             },
             data: {
                 name,
                 price,
-                additionalItemCategoryId
+                status,
+                additionalItemCategoryIds: {
+                    set: additionalItemCategoryIds
+                }
             }
         })
 
-        return NextResponse.json(additionalItem)
+
+        if (additionalItemCategoryIds?.length) {
+            await prismadb.additionalItemCategory.updateMany({
+                where: {
+                    id: {
+                        in: additionalItemCategoryIds
+                    }
+                },
+                data: {
+                    additionalItemsIds: {
+                        push: params.additionalItemId
+                    }
+                }
+            })
+        }
+
+        return NextResponse.json(updateAdditionalItem)
     } catch(error) {
         console.log('ADDITIONAL_ITEM_PATCH', error);
         return new NextResponse("Internal error", { status: 500 })
@@ -94,6 +137,33 @@ export async function DELETE(
                 id: params.additionalItemId,
             }
         })
+
+        if (additionalItem.additionalItemCategoryIds?.length) {
+            const additionalItemCategories = await prismadb.additionalItemCategory.findMany({
+                where: {
+                    id: {
+                        in: additionalItem.additionalItemCategoryIds
+                    }
+                }
+            })
+    
+            for (const additionalItemCategory of additionalItemCategories) {
+                const additionalItemsIds = additionalItemCategory.additionalItemsIds.filter((additionalItemsId) => additionalItemsId !== params.additionalItemId)
+    
+                await prismadb.additionalItemCategory.updateMany({
+                    where: {
+                        id: {
+                            in: additionalItem.additionalItemCategoryIds
+                        }
+                    },
+                    data: {
+                        additionalItemsIds: {
+                            set: additionalItemsIds
+                        }
+                    }
+                })
+            }
+        }
 
         return NextResponse.json(additionalItem)
     } catch(error) {

@@ -24,7 +24,8 @@ export async function POST(
         const {
             name,
             price,
-            additionalItemCategoryId,
+            status,
+            additionalItemCategoryIds,
         } = body;
 
         if (!name) {
@@ -34,28 +35,32 @@ export async function POST(
         if (!price) {
             return new NextResponse("Price is required", { status: 400 })
         }
-
-        if (!additionalItemCategoryId) {
-            return new NextResponse("Additional Item Category Id is required", { status: 400 })
-        }
-        
-        const additionalItemCategory = await prismadb.additionalItemCategory.findUnique({
-            where: {
-                id: additionalItemCategoryId
-            }
-        })
-
-        if (!additionalItemCategory) {
-            return new NextResponse("Additional Item Category Id not exist", { status: 404 })
-        }
         
         const newAdditionalItem = await prismadb.additionalItem.create({
             data: {
                 name,
                 price,
-                additionalItemCategoryId
+                status,
+                additionalItemCategoryIds: {
+                    set: additionalItemCategoryIds
+                }
             }
         })
+
+        if (additionalItemCategoryIds?.length) {
+            await prismadb.additionalItemCategory.updateMany({
+                where: {
+                    id: {
+                        in: additionalItemCategoryIds
+                    }
+                },
+                data: {
+                    additionalItemsIds: {
+                        push: newAdditionalItem.id
+                    }
+                }
+            })
+        }
 
         return NextResponse.json(newAdditionalItem);
     } catch(error) {

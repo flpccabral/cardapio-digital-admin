@@ -43,7 +43,9 @@ export async function POST(
             name,
             description,
             maxQtdItems,
+            status,
             productIds,
+            additionalItemsIds
         } = body;
 
         if (!maxQtdItems) {
@@ -57,14 +59,18 @@ export async function POST(
         if (!description) {
             return new NextResponse("Price is required", { status: 400 })
         }
-
+        
         const newAdditionalItemCategory = await prismadb.additionalItemCategory.create({
             data: {
                 name,
                 description,
                 maxQtdItems,
+                status,
                 productIds: {
                     set: productIds
+                },
+                additionalItemsIds: {
+                    set: additionalItemsIds
                 }
             }
         })
@@ -79,7 +85,7 @@ export async function POST(
                 data: {
                     additionalItemCategoryIds: {
                         push: newAdditionalItemCategory.id
-                    }
+                    },
                 }
             })
         }

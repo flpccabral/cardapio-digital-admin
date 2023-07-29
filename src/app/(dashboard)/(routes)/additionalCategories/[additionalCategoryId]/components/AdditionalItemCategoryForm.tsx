@@ -32,11 +32,9 @@ const formSchema = z.object({
     maxQtdItems: z.coerce.number().int({ message: "Somente numero inteiro"}).min(0, {
         message: "Minimo é 0"
     }),
-    productIds: z.string().array()
-    // categoryIds: z.string().min(1, {
-    //     message: "Selecione uma categoria"
-    // }),
-    // additionalItemsIds: z.string().array(),
+    status: z.boolean().default(true),
+    productIds: z.string().array(),
+    additionalItemsIds: z.string().array(),
 })
 
 type AdditionalItemCategoryFormValues = z.infer<typeof formSchema>;
@@ -47,7 +45,7 @@ interface AdditionalItemCategoryFormProps {
         additionalItems: AdditionalItem[]
     } | null;
     additionalItems: { value: string, label: string }[];
-    products: { value: string, label: string }[]
+    products: { value: string, label: string }[];
 }
 
 const AdditionalItemCategoryForm: React.FC<AdditionalItemCategoryFormProps> = ({
@@ -58,7 +56,7 @@ const AdditionalItemCategoryForm: React.FC<AdditionalItemCategoryFormProps> = ({
     const router = useRouter();
     const [open, setOpen] = useState(false);
 
-    const title = initialDate ? "Editar uma categoria de adicionais" : "Criar nova categoria de adicionais";
+    const title = initialDate ? "Editar categoria de adicionais" : "Criar nova categoria de adicionais";
     const description = initialDate ? "Editar uma categoria de adicionais" : "Adicionar uma nova categoria de adicionais";
     const toastMessage = initialDate ? "Categoria atualizada." : "Categoria criada.";
     const action = initialDate ? "Salvar alterações" : "Criar";
@@ -73,7 +71,8 @@ const AdditionalItemCategoryForm: React.FC<AdditionalItemCategoryFormProps> = ({
             description: "",
             maxQtdItems: 0,
             productIds: [],
-            // status: true,
+            additionalItemsIds: [],
+            status: true,
         },
     })
 
@@ -226,6 +225,54 @@ const AdditionalItemCategoryForm: React.FC<AdditionalItemCategoryFormProps> = ({
                                 </FormItem>
                             )}
                         />
+                        <FormField 
+                            control={form.control}
+                            name="additionalItemsIds"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Itens adicionais</FormLabel>
+                                    <Select
+                                        value={additionalItems.filter((item) => field.value.includes(item.value))}
+                                        onChange={(selectedOptions) => {
+                                            const selectedValues = selectedOptions.map((option) => option.value);
+                                            field.onChange(selectedValues);
+                                        }}
+                                        placeholder="Selecione"
+                                        options={additionalItems}
+                                        isMulti
+                                        isDisabled={isLoading}
+                                        closeMenuOnSelect={false}
+                                        classNames={{
+                                            
+                                        }}
+                                    />
+                                </FormItem>
+                            )}
+                        />
+                        {initialDate && (
+                            <FormField 
+                                control={form.control}
+                                name="status"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Status</FormLabel>
+                                        <FormControl>
+                                            <div className="flex items-center gap-6 pt-2">
+                                                <Switch
+                                                    disabled={isLoading}
+                                                    checked={field.value}
+                                                    onCheckedChange={field.onChange}
+                                                />
+                                                <Label className={field.value ? "text-green-500" : "text-red-500"}>
+                                                    {field.value ? 'Ativo' : 'Inativo'}
+                                                </Label>
+                                            </div>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        )}
                         {/* <FormField 
                             control={form.control}
                             name="categoryId"

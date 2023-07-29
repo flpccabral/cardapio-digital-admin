@@ -22,12 +22,8 @@ const CategoryPage = async ({
     return (
         <div className="space-y-16">
             <CategoryForm initialDate={category}/>
-            {category && (
-                <>
-                    <Separator />
-                    <ProductsClient data={formattedProducts!}/>  
-                </>
-            )}
+            <Separator />
+            <ProductsClient data={formattedProducts!}/>
         </div>
     )
 }

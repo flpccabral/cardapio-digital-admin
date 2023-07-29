@@ -25,6 +25,10 @@ const nav = [
         label: "Categorias de adicionais",
         url: "/additionalCategories"
     },
+    {
+        label: "Itens adicionais",
+        url: "/additionalItems"
+    },
 ]
 
 const NavSwitcher = () => {
