@@ -22,11 +22,11 @@ export const ToggleStatus: React.FC<ToggleStatus> = ({
           setIsLoading(true)
 
           await axios.patch(`/api/product/${data.id}`, {
-            status: !data.status
-          })
+            status: data.status ? false : true
+          });
           toast({
             description: "Status alterado!"
-          })
+          });
           router.refresh();
         } catch(error) {
           toast({
