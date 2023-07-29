@@ -1,20 +1,12 @@
 import prismadb from "@/lib/prismadb";
 import { ProductsClient } from "./components/client";
 import { ProductColumn } from "./components/columns";
+import getProducts from "@/actions/getProducts";
 
 export const revalidate = 0
 
 const ProductsPage = async () => {
-    const products = await prismadb.product.findMany({
-        orderBy: {
-            createdAt: "desc"
-        },
-        include: {
-            category: true,
-            additionalItemCategories: true,
-            images: true
-        }
-    })   
+    const products = await getProducts()
 
     const formattedProducts: ProductColumn[] = products.map((item) => ({
         id: item.id,
