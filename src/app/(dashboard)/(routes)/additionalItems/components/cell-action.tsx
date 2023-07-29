@@ -24,10 +24,10 @@ export const CellAction: React.FC<CellActionProps> = ({
     const onDelete = async () => {
         try {
             setLoading(true)
-            await axios.delete(`/api/additionalItems/${data?.id}`);
+            await axios.delete(`/api/additionalItem/${data?.id}`);
             router.refresh();
             toast({
-                description: "Item de adicionais excluida.",
+                description: "Item excluido.",
             });
             // router.push(`/additionalItems`);
             setOpen(false);
