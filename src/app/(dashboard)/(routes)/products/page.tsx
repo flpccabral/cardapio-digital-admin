@@ -2,6 +2,8 @@ import prismadb from "@/lib/prismadb";
 import { ProductsClient } from "./components/client";
 import { ProductColumn } from "./components/columns";
 
+export const revalidate = 0
+
 const ProductsPage = async () => {
     const products = await prismadb.product.findMany({
         orderBy: {

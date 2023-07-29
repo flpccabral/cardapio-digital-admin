@@ -3,6 +3,8 @@ import { CategoriesClient } from "./components/client";
 import { CategoryColumn } from "./components/columns";
 import { format } from "date-fns";
 
+export const revalidate = 0
+
 const CategoriesPage = async () => {
     const categories = await prismadb.category.findMany({
         orderBy: {
