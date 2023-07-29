@@ -76,7 +76,7 @@ export async function PATCH(
                         }
                     },
                     data: {
-                        productIds: {
+                        additionalItemsIds: {
                             set: additionalItemsIds
                         }
                     }
