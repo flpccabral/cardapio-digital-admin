@@ -2,18 +2,12 @@ import prismadb from "@/lib/prismadb";
 import { CategoriesClient } from "./components/client";
 import { CategoryColumn } from "./components/columns";
 import { format } from "date-fns";
+import getCategories from "@/actions/getCategories";
 
 export const revalidate = 0
 
 const CategoriesPage = async () => {
-    const categories = await prismadb.category.findMany({
-        orderBy: {
-            createdAt: "desc"
-        },
-        include: {
-            products: true
-        }
-    })
+    const categories = await getCategories()
 
     const formattedCategories: CategoryColumn[] = categories.map((item) => ({
         id: item.id,

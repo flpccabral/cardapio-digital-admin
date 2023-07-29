@@ -9,7 +9,11 @@ export default async function getCategories() {
         }
 
 
-        const category = await prismadb.category.findMany()
+        const category = await prismadb.category.findMany({
+            include: {
+                products: true,
+            }
+        })
 
         if (!category) {
             return []
