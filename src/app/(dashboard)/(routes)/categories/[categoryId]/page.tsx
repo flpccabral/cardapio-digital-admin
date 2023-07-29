@@ -3,6 +3,8 @@ import CategoryForm from "./components/CategoryForm";
 import { ProductsClient } from "@/app/(dashboard)/(routes)/products/components/client";
 import { Separator } from "@/components/ui/separator";
 
+export const revalidate = 0
+
 const CategoryPage = async ({
     params
 }: {

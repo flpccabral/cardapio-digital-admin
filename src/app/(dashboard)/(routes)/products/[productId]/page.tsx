@@ -3,6 +3,8 @@ import ProductFormProps from "./components/ProductForm";
 import getProduct from "@/actions/getProduct";
 import getAdditionalItemCategories from "@/actions/getAdditionalItemCategories";
 
+export const revalidate = 0
+
 const CategoryPage = async ({
     params
 }: {
