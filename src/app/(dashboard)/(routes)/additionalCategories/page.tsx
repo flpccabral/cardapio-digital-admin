@@ -10,7 +10,8 @@ const AdditionalCategoriesPage = async () => {
         name: item.name,
         maxQtdItems: item.maxQtdItems.toString(),
         qtdProducts: item.products.length.toString(),
-        qtdAdditionalItems: item.additionalItems.length.toString()
+        qtdAdditionalItems: item.additionalItems.length.toString(),
+        status: item.status
     }))
 
     return (

@@ -45,15 +45,30 @@ export async function PATCH(
 
         const {
             name,
+            status,
         } = body;
-
-        if (!name) {
-            return new NextResponse("Name is required", { status: 400 })
-        }
 
         if (!params.categoryId) {
             return new NextResponse("Category id is require", { status: 400 })
         }
+
+        if (!name && (typeof status === "boolean")) {
+            const updateStatus = await prismadb.category.update({
+                where: {
+                    id: params.categoryId,
+                },
+                data: {
+                    status: !status
+                }
+            })
+
+            return NextResponse.json(updateStatus)
+        }
+        
+        if (!name) {
+            return new NextResponse("Name is required", { status: 400 })
+        }
+
 
         const category = await prismadb.category.updateMany({
             where: {
@@ -61,6 +76,7 @@ export async function PATCH(
             },
             data: {
                 name,
+                status
             }
         })
 

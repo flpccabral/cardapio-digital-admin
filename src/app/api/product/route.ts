@@ -99,7 +99,6 @@ export async function POST(
             }
         })
 
-        
 
         if (additionalItemCategoryIds?.length) {
             await prismadb.additionalItemCategory.updateMany({

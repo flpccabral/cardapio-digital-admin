@@ -25,15 +25,17 @@ import {
 } from "@/components/ui/table"
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
-  searchKey: string
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+  searchKey: string;
+  onClickReorder?: () => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  searchKey
+  searchKey,
+  onClickReorder
 }: DataTableProps<TData, TValue>) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
         []
@@ -53,19 +55,24 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-        <div className="flex items-center py-4">
+        <div className="flex justify-between items-center gap-4 py-4 w-full">
             <Input
-            placeholder="Buscar"
-            value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-                table.getColumn(searchKey)?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
+                placeholder="Buscar"
+                value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
+                onChange={(event) =>
+                    table.getColumn(searchKey)?.setFilterValue(event.target.value)
+                }
+                className="max-w-sm"
             />
+            {onClickReorder && data.length > 1 && (
+                <Button onClick={onClickReorder}>
+                    Reordenar
+                </Button>
+            )}
         </div>
         <div className="rounded-md border">
         <Table>
-            <TableHeader>
+            <TableHeader className="whitespace-nowrap">
             {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {

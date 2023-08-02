@@ -2,6 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import { CellAction } from "./cell-action"
+import { ToggleStatus } from "@/components/ui/toggle-status"
 
 export type AdditionalCategoryColumn = {
   id: string
@@ -9,6 +10,7 @@ export type AdditionalCategoryColumn = {
   maxQtdItems: string
   qtdProducts: string
   qtdAdditionalItems: string
+  status: boolean
 }
 
 export const columns: ColumnDef<AdditionalCategoryColumn>[] = [
@@ -27,6 +29,11 @@ export const columns: ColumnDef<AdditionalCategoryColumn>[] = [
   {
     accessorKey: "qtdAdditionalItems",
     header: "Qtd de itens adiconais",
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => <ToggleStatus url={`/api/additionalItemCategory/${row.original.id}`} status={row.original.status}/>
   },
   {
     id: "actions",

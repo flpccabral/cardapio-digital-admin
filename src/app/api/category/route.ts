@@ -39,9 +39,16 @@ export async function POST(
             name
         } = body;
 
+        const lastCategory = await prismadb.category.findFirst({
+            orderBy: {
+                createdAt: 'desc'
+            }
+        })
+
         const newCategory = await prismadb.category.create({
             data: {
-                name
+                name,
+                order: lastCategory ? (lastCategory?.order + 1) : 0
             }
         })
 
@@ -49,5 +56,53 @@ export async function POST(
     } catch(error) {
         console.log('[CATEGORY_POST]', error)
         return new NextResponse("Interal error", { status: 500 })
+    }
+}
+
+export async function PATCH(
+    request: Request,
+) {
+    try {
+        const body = await request.json();
+
+        const {
+            data
+        } = body;
+
+        const categories = await prismadb.category.findMany()
+
+        if (categories.length !== data.length) {
+            return new NextResponse("Categories invalids", { status: 400 })
+        }
+        
+        // data?.map(async (category: any, index: any) => {
+        //     console.log(category)
+        //     await prismadb.category.update({
+        //         where: {
+        //             id: category.id
+        //         },
+        //         data: {
+        //             order: Number(index)
+        //         }
+        //     })
+        // })
+
+        for (const category of data) {
+            const index = data.indexOf(category)
+
+            await prismadb.category.update({
+                where: {
+                    id: category.id
+                },
+                data: {
+                    order: index
+                }
+            })
+        }
+
+        return NextResponse.json({})
+    } catch(error) {
+        console.log('[PRODUCT_PATCH', error);
+        return new NextResponse("Internal error", { status: 500 })
     }
 }

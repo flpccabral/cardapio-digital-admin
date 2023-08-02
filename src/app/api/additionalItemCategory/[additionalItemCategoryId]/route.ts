@@ -47,6 +47,19 @@ export async function PATCH(
             return new NextResponse("Additional Item Category Id is require", { status: 400 })
         }
 
+        if (!name && !maxQtdItems && (typeof status === "boolean")) {
+            const updateStatus = await prismadb.additionalItemCategory.update({
+                where: {
+                    id: params.additionalItemCategoryId,
+                },
+                data: {
+                    status: !status
+                }
+            })
+
+            return NextResponse.json(updateStatus)
+        }
+
         if (!name) {
             return new NextResponse("Name is required", { status: 400 })
         }

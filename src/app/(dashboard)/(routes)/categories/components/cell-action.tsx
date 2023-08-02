@@ -25,11 +25,11 @@ export const CellAction: React.FC<CellActionProps> = ({
         try {
             setLoading(true)
             await axios.delete(`/api/category/${data?.id}`);
-            router.refresh();
             toast({
                 description: "Categoria excluida.",
             });
-            router.push(`/categories`);
+            router.refresh();
+            // router.push(`/categories`);
             setOpen(false);
         } catch(error) {
             toast({

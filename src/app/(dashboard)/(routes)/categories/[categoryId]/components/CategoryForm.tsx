@@ -15,9 +15,14 @@ import { toast } from "@/components/ui/use-toast";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { AlertModal } from "@/components/modals/AlertModal";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 const formSchema = z.object({
-    name: z.string().min(1),
+    name: z.string().min(1, {
+        message: "Informe uma categoria"
+    }),
+    status: z.boolean().default(true),
 })
 
 type CategoryFormValues = z.infer<typeof formSchema>;
@@ -40,7 +45,8 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
     const form = useForm<CategoryFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: initialDate || {
-            name: ""
+            name: "",
+            status: true,
         },
     })
 
@@ -135,6 +141,30 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
                             )}
                         />
                     </div>
+                    {initialDate && (
+                        <FormField 
+                            control={form.control}
+                            name="status"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Status</FormLabel>
+                                    <FormControl>
+                                        <div className="flex items-center gap-6 pt-2">
+                                            <Switch
+                                                disabled={isLoading}
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                            />
+                                            <Label className={field.value ? "text-green-500" : "text-red-500"}>
+                                                {field.value ? 'Ativo' : 'Inativo'}
+                                            </Label>
+                                        </div>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    )}
                     <div className="flex justify-end pt-4">
                         <Button
                             type="submit"

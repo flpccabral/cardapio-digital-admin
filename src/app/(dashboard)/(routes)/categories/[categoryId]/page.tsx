@@ -25,7 +25,9 @@ const CategoryPage = async ({
         <div className="space-y-16">
             <CategoryForm initialDate={category}/>
             <Separator />
-            <ProductsClient data={formattedProducts || []}/>
+            {params.categoryId !== 'new' && (
+                <ProductsClient data={formattedProducts || []}/>
+            )}
         </div>
     )
 }

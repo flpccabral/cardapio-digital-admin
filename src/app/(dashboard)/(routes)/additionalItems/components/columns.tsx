@@ -2,6 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import { CellAction } from "./cell-action"
+import { ToggleStatus } from "@/components/ui/toggle-status"
 
 export type AdditionalItemColumn = {
   id: string
@@ -27,6 +28,7 @@ export const columns: ColumnDef<AdditionalItemColumn>[] = [
   {
     accessorKey: "status",
     header: "Status",
+    cell: ({ row }) => <ToggleStatus url={`/api/additionalItem/${row.original.id}`} status={row.original.status}/>
   },
   {
     id: "actions",

@@ -12,6 +12,9 @@ export default async function getCategories() {
         const category = await prismadb.category.findMany({
             include: {
                 products: true,
+            },
+            orderBy: {
+                order: 'asc'
             }
         })
 

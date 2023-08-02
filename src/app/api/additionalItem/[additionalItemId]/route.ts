@@ -42,6 +42,19 @@ export async function PATCH(
             return new NextResponse("Additional Item Id is require", { status: 400 })
         }
 
+        if (!name && !price && (status || !status)) {
+            const updateStatus = await prismadb.additionalItem.update({
+                where: {
+                    id: params.additionalItemId,
+                },
+                data: {
+                    status: !status
+                }
+            })
+
+            return NextResponse.json(updateStatus)
+        }
+
         if (!name) {
             return new NextResponse("Name is required", { status: 400 })
         }

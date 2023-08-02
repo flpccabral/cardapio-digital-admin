@@ -27,7 +27,7 @@ const Sidebar = () => {
                     <Button
                         className="w-full text-base"
                     >
-                        Configuração
+                        Configurações
                     </Button>
                     <Button
                         onClick={() => signOut()}

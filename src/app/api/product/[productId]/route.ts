@@ -58,7 +58,7 @@ export async function PATCH(
                     id: params.productId,
                 },
                 data: {
-                    status
+                    status: !status
                 }
             })
 
