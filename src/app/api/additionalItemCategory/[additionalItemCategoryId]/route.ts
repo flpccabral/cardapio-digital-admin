@@ -105,6 +105,42 @@ export async function PATCH(
             }
         }
 
+
+
+
+
+
+
+
+
+
+        if (additionalItemCategory?.additionalItemsIds.length) {
+            const additionalItems = await prismadb.additionalItem.findMany({
+                where: {
+                    id: {
+                        in: additionalItemCategory.additionalItemsIds
+                    }
+                }
+            })
+    
+            for (const additionalItem of additionalItems) {
+                const additionalItemCategoryIds = additionalItem.additionalItemCategoryIds.filter((additionalItemCategoryId) => additionalItemCategoryId !== params.additionalItemCategoryId)
+    
+                await prismadb.additionalItem.updateMany({
+                    where: {
+                        id: {
+                            in: additionalItemCategory.additionalItemsIds
+                        }
+                    },
+                    data: {
+                        additionalItemCategoryIds: {
+                            set: additionalItemCategoryIds
+                        }
+                    }
+                })
+            }
+        }
+
         const updateAdditionalItemCategory = await prismadb.additionalItemCategory.updateMany({
             where: {
                 id: params.additionalItemCategoryId,
@@ -138,6 +174,22 @@ export async function PATCH(
             })
         }
 
+
+        if (additionalItemsIds?.length) {
+            await prismadb.additionalItem.updateMany({
+                where: {
+                    id: {
+                        in: additionalItemsIds
+                    }
+                },
+                data: {
+                    additionalItemCategoryIds: {
+                        push: params.additionalItemCategoryId
+                    }
+                }
+            })
+        }
+
         return NextResponse.json(updateAdditionalItemCategory)
     } catch(error) {
         console.log('ADDITIONAL_ITEM_CATEGORY_PATCH', error);
@@ -155,18 +207,18 @@ export async function DELETE(
             return new NextResponse("Additional Item Category Id is require", { status: 400 })
         }
 
-        const additionalItemCategory = await prismadb.additionalItemCategory.findUnique({
-            where: {
-                id: params.additionalItemCategoryId,
-            },
-            include: {
-                additionalItems: true
-            }
-        })
+        // const additionalItemCategory = await prismadb.additionalItemCategory.findUnique({
+        //     where: {
+        //         id: params.additionalItemCategoryId,
+        //     },
+        //     include: {
+        //         additionalItems: true
+        //     }
+        // })
 
-        if (additionalItemCategory?.additionalItems.length) {
-            return new NextResponse("There are additional items in this category", { status: 403 })
-        }
+        // if (additionalItemCategory?.additionalItems.length) {
+        //     return new NextResponse("There are additional items in this category", { status: 403 })
+        // }
 
         const deletedadditionalItemCategory = await prismadb.additionalItemCategory.delete({
             where: {
