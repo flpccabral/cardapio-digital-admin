@@ -1,9 +1,10 @@
 "use client"
 
-import { Modal } from "@/components/ui/modal"
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { DragDropContext, Droppable, Draggable, DropResult} from "react-beautiful-dnd"
+import Modal2 from "@/components/ui/modal2";
+import { GripVertical } from "lucide-react";
 
 export type ReoderType = {
     id: string;
@@ -57,42 +58,43 @@ export const ReoderModal: React.FC<ReoderModalProps> = ({
     }
 
     return (
-        <Modal
+        <Modal2
             title="Reordenar"
             // description="Essa ação não pode ser desfeita"
             isOpen={isOpen}
             onClose={onClose}
         >   
             <div className="overflow-y-auto max-h-[60vh]">
-            <DragDropContext onDragEnd={handleDragDrop}>
-                <Droppable droppableId="ROOT" type="group">
-                    {(provided) => (
-                        <div {...provided.droppableProps} ref={provided.innerRef}>
-                            {data.map((item, index) => (
-                                <Draggable isDragDisabled={loading} draggableId={item.id} key={item.id} index={index}>
-                                    {(provided) => (
-                                        <div 
-                                            {...provided.dragHandleProps}
-                                            {...provided.draggableProps}
-                                            ref={provided.innerRef}
-                                            style={{...provided.draggableProps.style}}
-                                            className="flex justify-between items-center gap-16 w-full p-2 border bg-white mb-2 shadow rounded"
-                                        >
-                                            <span>
-                                                {item.name}
-                                            </span>
-                                            <div className="font-bold">
-                                                ::
+                <DragDropContext onDragEnd={handleDragDrop}>
+                    <Droppable droppableId="ROOT" type="group">
+                        {(provided) => (
+                            <div 
+                                {...provided.droppableProps} 
+                                ref={provided.innerRef}
+                            >
+                                {data.map((item, index) => (
+                                    <Draggable key={item.id} draggableId={item.id} index={index} isDragDisabled={loading}>
+                                        {(provided) => (
+                                            <div
+                                                ref={provided.innerRef}
+                                                {...provided.draggableProps}
+                                                {...provided.dragHandleProps}
+                                                style={{...provided.draggableProps.style}}
+                                                className="flex justify-between items-center gap-16 w-full p-2 border bg-white mb-2 shadow rounded"
+                                            >
+                                                <span>
+                                                    {item.name}
+                                                </span>
+                                                <GripVertical />
                                             </div>
-                                        </div>
-                                    )}
-                                </Draggable>
-                            ))}
-                            {provided.placeholder}
-                        </div>
-                    )}
-                </Droppable>
-            </DragDropContext>
+                                        )}
+                                    </Draggable>
+                                ))}
+                                {provided.placeholder}
+                            </div>
+                        )}
+                    </Droppable>
+                </DragDropContext>
             </div>
             <div className="pt-6 space-x-2 flex items-center justify-end flex-wrap-reverse w-full">
                 <Button
@@ -109,6 +111,6 @@ export const ReoderModal: React.FC<ReoderModalProps> = ({
                     Confirmar
                 </Button>
             </div>
-        </Modal>
+        </Modal2>
     )
 }
