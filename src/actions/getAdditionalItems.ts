@@ -12,6 +12,9 @@ export default async function getAdditionalItems() {
         const additionalItems = await prismadb.additionalItem.findMany({
             include: {
                 additionalItemCategory: true
+            },
+            orderBy: {
+                price: 'asc'
             }
         })
 

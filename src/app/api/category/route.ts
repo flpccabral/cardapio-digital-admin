@@ -74,18 +74,6 @@ export async function PATCH(
         if (categories.length !== data.length) {
             return new NextResponse("Categories invalids", { status: 400 })
         }
-        
-        // data?.map(async (category: any, index: any) => {
-        //     console.log(category)
-        //     await prismadb.category.update({
-        //         where: {
-        //             id: category.id
-        //         },
-        //         data: {
-        //             order: Number(index)
-        //         }
-        //     })
-        // })
 
         for (const category of data) {
             const index = data.indexOf(category)

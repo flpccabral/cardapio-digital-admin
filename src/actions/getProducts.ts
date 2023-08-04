@@ -13,6 +13,9 @@ export default async function getProducts() {
                 images: true,
                 category: true,
                 additionalItemCategories: true,
+            },
+            orderBy: {
+                price: 'asc'
             }
         })
 

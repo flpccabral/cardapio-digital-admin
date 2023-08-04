@@ -2,6 +2,8 @@ import getCategories from "@/actions/getCategories";
 import ProductFormProps from "./components/ProductForm";
 import getProduct from "@/actions/getProduct";
 import getAdditionalItemCategories from "@/actions/getAdditionalItemCategories";
+import { AdditionalCategoriesClient } from "@/app/(dashboard)/(routes)/additionalCategories/components/client";
+import { Separator } from "@/components/ui/separator";
 
 export const revalidate = 0
 
@@ -19,10 +21,24 @@ const CategoryPage = async ({
         value: item.id
     }))
 
+    const formattedAdditionalCategories = product?.additionalItemCategories?.map((item) => ({
+        id: item.id,
+        name: item.name,
+        maxQtdItems: item.maxQtdItems.toString(),
+        qtdProducts: item.products.length.toString(),
+        qtdAdditionalItems: item.additionalItems.length.toString(),
+        status: item.status,
+        order: item.order
+    }))
+
     return (
-        <>
+        <div className="space-y-16">
             <ProductFormProps initialDate={product} categories={categories} additionalItemCategories={formattedAdditionalItemCategories}/>
-        </>
+            <Separator />
+            {params.productId !== 'new' && (
+                <AdditionalCategoriesClient data={formattedAdditionalCategories || []}/>
+            )}
+        </div>
     )
 }
 

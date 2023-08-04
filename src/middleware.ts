@@ -11,8 +11,16 @@ export default withAuth({
 export const config = { 
   matcher: [
     "/",
-    "/consultation",
-    "/consultation/:path*",
-    "/consultation/register",
+    "/categories/:path*",
+    "/products/:path*",
+    "/additionalCategories/:path*",
+    "/additionalItems/:path*",
+    "/settings/:path*",
+
+    "/api/category/:path*",
+    "/api/product/:path*",
+    "/api/additionalItemCategory/:path*",
+    "/api/additionalItem/:path*",
+    "/api/restaurant/:path*",
   ]
 }

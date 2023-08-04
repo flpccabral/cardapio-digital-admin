@@ -18,7 +18,7 @@ export const AdditionalItemsClient: React.FC<AdditionalItemsClientProps> = ({
     const router = useRouter();
 
     return (
-        <>
+        <div>
             <div className="flex items-center gap-2 justify-between">
                 <Heading
                     title={`Itens de adicionais (${data.length})`}
@@ -36,7 +36,7 @@ export const AdditionalItemsClient: React.FC<AdditionalItemsClientProps> = ({
             </div>
             <Separator />
             <DataTable searchKey="name" columns={columns} data={data}/>
-        </>
+        </div>
     )
 }
 

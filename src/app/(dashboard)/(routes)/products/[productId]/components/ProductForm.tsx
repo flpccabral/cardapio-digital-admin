@@ -121,7 +121,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
     }
 
     return (
-        <>
+        <div>
             <AlertModal 
                 isOpen={open}
                 onClose={()=>setOpen(false)}
@@ -319,8 +319,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
                     </div>
                 </form>
             </Form>
-            <Separator />
-        </>
+        </div>
     )
 }
 

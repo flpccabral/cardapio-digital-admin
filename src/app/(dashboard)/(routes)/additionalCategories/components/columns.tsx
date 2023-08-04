@@ -11,6 +11,7 @@ export type AdditionalCategoryColumn = {
   qtdProducts: string
   qtdAdditionalItems: string
   status: boolean
+  order: number
 }
 
 export const columns: ColumnDef<AdditionalCategoryColumn>[] = [

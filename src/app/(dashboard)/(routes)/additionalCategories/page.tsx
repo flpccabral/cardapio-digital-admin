@@ -11,7 +11,8 @@ const AdditionalCategoriesPage = async () => {
         maxQtdItems: item.maxQtdItems.toString(),
         qtdProducts: item.products.length.toString(),
         qtdAdditionalItems: item.additionalItems.length.toString(),
-        status: item.status
+        status: item.status,
+        order: item.order
     }))
 
     return (

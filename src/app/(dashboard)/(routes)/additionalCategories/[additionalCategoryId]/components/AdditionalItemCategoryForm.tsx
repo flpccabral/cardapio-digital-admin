@@ -117,7 +117,7 @@ const AdditionalItemCategoryForm: React.FC<AdditionalItemCategoryFormProps> = ({
     }
 
     return (
-        <>
+        <div>
             <AlertModal 
                 isOpen={open}
                 onClose={()=>setOpen(false)}
@@ -368,8 +368,7 @@ const AdditionalItemCategoryForm: React.FC<AdditionalItemCategoryFormProps> = ({
                     </div>
                 </form>
             </Form>
-            <Separator />
-        </>
+        </div>
     )
 }
 

@@ -17,6 +17,9 @@ export default async function getAdditionalItemCategories() {
                     }
                 },
                 additionalItems: true
+            },
+            orderBy: {
+                order: 'asc'
             }
         })
 

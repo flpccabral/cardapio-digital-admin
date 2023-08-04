@@ -59,6 +59,12 @@ export async function POST(
         if (!description) {
             return new NextResponse("Price is required", { status: 400 })
         }
+
+        const lastAdditionalItemCategory = await prismadb.additionalItemCategory.findFirst({
+            orderBy: {
+                createdAt: "desc"
+            }
+        })
         
         const newAdditionalItemCategory = await prismadb.additionalItemCategory.create({
             data: {
@@ -66,6 +72,7 @@ export async function POST(
                 description,
                 maxQtdItems,
                 status,
+                order: lastAdditionalItemCategory ? (lastAdditionalItemCategory?.order + 1) : 0,
                 productIds: {
                     set: productIds
                 },
@@ -74,6 +81,21 @@ export async function POST(
                 }
             }
         })
+
+        if (additionalItemsIds?.length) {
+            await prismadb.additionalItem.updateMany({
+                where: {
+                    id: {
+                        in: additionalItemsIds
+                    }
+                },
+                data: {
+                    additionalItemCategoryIds: {
+                        push: newAdditionalItemCategory.id
+                    },
+                }
+            })
+        }
 
         if (productIds?.length) {
             await prismadb.product.updateMany({
@@ -94,5 +116,41 @@ export async function POST(
     } catch(error) {
         console.log('[ADDITIONAL_ITEM_CATEGORY_POST]', error)
         return new NextResponse("Interal error", { status: 500 })
+    }
+}
+
+export async function PATCH(
+    request: Request,
+) {
+    try {
+        const body = await request.json();
+
+        const {
+            data
+        } = body;
+
+        const additionalItemCategories = await prismadb.additionalItemCategory.findMany()
+
+        if (additionalItemCategories.length !== data.length) {
+            return new NextResponse("Categories invalids", { status: 400 })
+        }
+
+        for (const additionalItemCategory of data) {
+            const index = data.indexOf(additionalItemCategory)
+
+            await prismadb.additionalItemCategory.update({
+                where: {
+                    id: additionalItemCategory.id
+                },
+                data: {
+                    order: index
+                }
+            })
+        }
+
+        return NextResponse.json({})
+    } catch(error) {
+        console.log('[ADDITIONAL_ITEM_CATEGORY_PATCH', error);
+        return new NextResponse("Internal error", { status: 500 })
     }
 }
