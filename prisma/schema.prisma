@@ -43,7 +43,7 @@ model Address {
   city          String      @default("rio de janeiro")
   state         String      @default("rio de janeiro")
   zipCode       Int         @default(21230712)
-  country       String      @default("Brasil")
+  country       String?     @default("Brasil")
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   restaurant    Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)

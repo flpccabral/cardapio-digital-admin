@@ -58,9 +58,9 @@ const formSchema = z.object({
         }).max(99999999, {
             message: "CEP inválido"
         }),
-        country: z.string().min(1, {
-            message: "Preencha o País"
-        })
+        // country: z.string().min(1, {
+        //     message: "Preencha o País"
+        // })
     }),
 })
 
@@ -94,7 +94,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                 complement: "",
                 zipCode: undefined,
                 state: "",
-                country: "",
+                // country: "",
                 neighborhood: "",
                 number: undefined,
             },
@@ -112,7 +112,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                 city: "",
                 complement: "",
                 state: "",
-                country: "",
+                // country: "",
                 neighborhood: "",
                 zipCode: undefined,
             }
@@ -138,6 +138,41 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
             });
         }
     }
+
+    const handleGetAddress = async (cep: string) => {
+        if (cep.length === 8) {
+            try {
+                const response = await axios.get(`https://brasilapi.com.br/api/cep/v2/${cep}`)
+
+                form.setValue('address.streetAddress', response.data.street)
+                form.setValue('address.neighborhood', response.data.neighborhood)
+                form.setValue('address.city', response.data.city)
+                form.setValue('address.state', response.data.state)
+            } catch(error) {
+                toast({
+                    variant: "destructive",
+                    description: "Endereço não encontrado.",
+                });
+            }
+        } else {
+            form.setValue('address.streetAddress', '')
+            form.setValue('address.neighborhood', '')
+            form.setValue('address.city', '')
+            form.setValue('address.state', '')
+        }
+        form.trigger();
+    }
+
+    // const zipCode = form.watch('address.zipCode')
+
+    // if (zipCode.toString().length === 8) {
+    //     handleGetAddress(zipCode.toString())
+    // } else if (zipCode.toString().length === 0) {
+    //     form.setValue('address.streetAddress', '')
+    //     form.setValue('address.neighborhood', '')
+    //     form.setValue('address.city', '')
+    //     form.setValue('address.state', '')
+    // }
     
     return (
         <>
@@ -303,6 +338,10 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                                             disabled={isLoading}
                                             placeholder="Ex: 99999999"
                                             {...field}
+                                            onChange={(e) => {
+                                                field.onChange(e)
+                                                handleGetAddress(e.target.value)
+                                            }}
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -353,7 +392,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                             name="address.complement"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Número</FormLabel>
+                                    <FormLabel>Complemento</FormLabel>
                                     <FormControl>
                                         <Input
                                             error={form.formState.errors.address?.complement}
@@ -420,7 +459,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                                 </FormItem>
                             )}
                         />
-                        <FormField 
+                        {/* <FormField 
                             control={form.control}
                             name="address.country"
                             render={({ field }) => (
@@ -437,7 +476,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                                     <FormMessage />
                                 </FormItem>
                             )}
-                        />
+                        /> */}
                     </div>
                     <div className="flex justify-end pt-4">
                         <Button

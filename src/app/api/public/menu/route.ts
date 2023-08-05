@@ -35,7 +35,7 @@ export async function GET(
 
         return NextResponse.json(menu);
     } catch(error) {
-        console.log('[MENU_GET]', error)
+        console.log('[PUBLIC_MENU_GET]', error)
         return new NextResponse("Interal error", { status: 500 })
     }
 }

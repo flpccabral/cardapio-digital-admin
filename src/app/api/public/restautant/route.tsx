@@ -13,7 +13,7 @@ export async function GET(
 
         return NextResponse.json(restaurants[0]);
     } catch(error) {
-        console.log('[RESTAURANTS_GET]', error)
+        console.log('[PUBLIC_RESTAURANTS_GET]', error)
         return new NextResponse("Interal error", { status: 500 })
     }
 }

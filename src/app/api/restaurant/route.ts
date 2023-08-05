@@ -129,10 +129,6 @@ export async function PATCH(
             return new NextResponse("State is required", { status: 400 })
         }
 
-        if (!country) {
-            return new NextResponse("Country is required", { status: 400 })
-        }
-
         if (!neighborhood) {
             return new NextResponse("Neighborhood is required", { status: 400 })
         }
