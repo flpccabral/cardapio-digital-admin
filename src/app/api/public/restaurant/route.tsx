@@ -1,19 +1,23 @@
 import prismadb from "@/lib/prismadb";
 import { NextResponse } from "next/server";
 
+export const revalidate = 0
+
 export async function GET(
     request: Request,
 ) {
     try {
-        const restaurants = await prismadb.restaurant.findMany({
+        const body = await request.json();
+
+        const restaurant = await prismadb.restaurant.findFirst({
             include: {
                 address: true
             }
         })
 
-        return NextResponse.json(restaurants[0]);
+        return NextResponse.json(restaurant);
     } catch(error) {
-        console.log('[PUBLIC_RESTAURANTS_GET]', error)
+        console.log('[PUBLIC_RESTAURANT_GET]', error)
         return new NextResponse("Interal error", { status: 500 })
     }
 }
