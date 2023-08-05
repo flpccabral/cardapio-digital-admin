@@ -1,8 +1,13 @@
-const SettingsPage = () => {
+import getRestaurant from "@/actions/getRestaurant";
+import SettingsForm from "./components/SettingsForm";
+
+const SettingsPage = async () => {
+    const restaurant = await getRestaurant();
+
     return (
-        <div>
-            settings
-        </div>
+        <>
+            <SettingsForm initialDate={restaurant}/>
+        </>
     )
 }
 

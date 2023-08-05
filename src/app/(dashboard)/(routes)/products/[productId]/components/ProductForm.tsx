@@ -46,7 +46,8 @@ interface ProductFormProps {
         category: Category,
         additionalItemCategories: AdditionalItemCategory[]
     } | null;
-    categories: Category[];
+    // categories: Category[];
+    categories: { value: string, label: string }[];
     additionalItemCategories: { value: string, label: string }[]
 }
 
@@ -212,7 +213,19 @@ const ProductForm: React.FC<ProductFormProps> = ({
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Categoria</FormLabel>
-                                    <Select 
+                                    <SelectMult
+                                        value={categories.filter((item) => field.value.includes(item.value))}
+                                        onChange={(selectedOptions) => {
+                                            field.onChange(selectedOptions?.value);
+                                        }}
+                                        placeholder="Selecione uma categoria"
+                                        options={categories}
+                                        isDisabled={isLoading}
+                                        classNames={{
+                                            
+                                        }}
+                                    />
+                                    {/* <Select 
                                         disabled={isLoading}
                                         onValueChange={field.onChange}
                                         value={field.value}
@@ -236,7 +249,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
-                                    </Select>
+                                    </Select> */}
                                     <FormMessage />
                                 </FormItem>
                             )}

@@ -21,6 +21,11 @@ const CategoryPage = async ({
         value: item.id
     }))
 
+    const formattedCategories: { value: string, label: string}[] = categories.map((item) => ({
+        label: item.name,
+        value: item.id
+    }))
+
     const formattedAdditionalCategories = product?.additionalItemCategories?.map((item) => ({
         id: item.id,
         name: item.name,
@@ -33,7 +38,7 @@ const CategoryPage = async ({
 
     return (
         <div className="space-y-16">
-            <ProductFormProps initialDate={product} categories={categories} additionalItemCategories={formattedAdditionalItemCategories}/>
+            <ProductFormProps initialDate={product} categories={formattedCategories} additionalItemCategories={formattedAdditionalItemCategories}/>
             <Separator />
             {params.productId !== 'new' && (
                 <AdditionalCategoriesClient data={formattedAdditionalCategories || []}/>
