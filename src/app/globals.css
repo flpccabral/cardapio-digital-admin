@@ -7,7 +7,6 @@ body,
 :root {
   @apply
   h-full
-  overscroll-none
   bg-neutral-50
   text-neutral-950
 }
