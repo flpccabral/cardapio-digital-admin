@@ -7,7 +7,6 @@ export async function GET(
     request: Request,
 ) {
     try {
-        const body = await request.json();
 
         const restaurant = await prismadb.restaurant.findFirst({
             include: {
