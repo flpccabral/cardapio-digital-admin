@@ -9,13 +9,35 @@ export async function GET(
     try {
         
         const menu = await prismadb.category.findMany({
+            where: {
+                status: true,
+                products: {
+                    some: {
+                        status: true
+                    }
+                }
+            },
             include: {
                 products: {
+                    where: {
+                        status: true,
+                    },
                     include: {
                         images: true,
                         additionalItemCategories: {
+                            where: {
+                                status: true,
+                                additionalItems: {
+                                    some: {
+                                        status: true
+                                    }
+                                }
+                            },
                             include: {
                                 additionalItems: {
+                                    where: {
+                                        status: true
+                                    },
                                     orderBy: {
                                         price: "asc"
                                     }

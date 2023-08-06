@@ -12,13 +12,25 @@ export async function GET(
 
         const product = await prismadb.product.findUnique({
             where: {
+                status: true,
                 id: params.productId,
             },
             include: {
                 images: true,
                 additionalItemCategories: {
+                    where: {
+                        status: true,
+                        additionalItems: {
+                            some: {
+                                status: true
+                            }
+                        }
+                    },
                     include: {
                         additionalItems: {
+                            where: {
+                                status: true,
+                            },
                             orderBy: {
                                 price: "asc"
                             }
