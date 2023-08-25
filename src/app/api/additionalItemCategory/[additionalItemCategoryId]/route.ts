@@ -64,9 +64,9 @@ export async function PATCH(
             return new NextResponse("Name is required", { status: 400 })
         }
 
-        if (!description) {
-            return new NextResponse("Description is required", { status: 400 })
-        }
+        // if (!description) {
+        //     return new NextResponse("Description is required", { status: 400 })
+        // }
 
         if (!maxQtdItems) {
             return new NextResponse("Maximum amount of itens is required", { status: 400 })

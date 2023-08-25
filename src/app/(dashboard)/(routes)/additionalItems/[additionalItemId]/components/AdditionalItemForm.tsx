@@ -23,7 +23,7 @@ const formSchema = z.object({
     name: z.string().min(1, {
         message: "Preencha o nome"
     }),
-    price: z.coerce.number().min(1, {
+    price: z.coerce.number().min(0, {
         message: "Preencha o preço"
     }),
     status: z.boolean().default(true),

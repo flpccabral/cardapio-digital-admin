@@ -26,9 +26,7 @@ const formSchema = z.object({
     name: z.string().min(1, {
         message: "Preencha o nome"
     }),
-    description: z.string().min(1, {
-        message: "Preencha a descrição",
-    }),
+    description: z.string(),
     maxQtdItems: z.coerce.number().int({ message: "Somente numero inteiro"}).min(0, {
         message: "Minimo é 0"
     }),

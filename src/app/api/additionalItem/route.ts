@@ -32,9 +32,9 @@ export async function POST(
             return new NextResponse("Name is required", { status: 400 })
         }
 
-        if (!price) {
-            return new NextResponse("Price is required", { status: 400 })
-        }
+        // if (!price) {
+        //     return new NextResponse("Price is required", { status: 400 })
+        // }
         
         const newAdditionalItem = await prismadb.additionalItem.create({
             data: {

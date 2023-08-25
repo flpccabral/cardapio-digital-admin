@@ -56,9 +56,9 @@ export async function POST(
             return new NextResponse("Name is required", { status: 400 })
         }
 
-        if (!description) {
-            return new NextResponse("Price is required", { status: 400 })
-        }
+        // if (!description) {
+        //     return new NextResponse("Description is required", { status: 400 })
+        // }
 
         const lastAdditionalItemCategory = await prismadb.additionalItemCategory.findFirst({
             orderBy: {

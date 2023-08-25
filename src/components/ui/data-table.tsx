@@ -23,6 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { usePathname } from "next/navigation"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -37,9 +38,8 @@ export function DataTable<TData, TValue>({
   searchKey,
   onClickReorder
 }: DataTableProps<TData, TValue>) {
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
-        []
-    )
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+    const pathName = usePathname();
 
     const table = useReactTable({
         data,
@@ -64,7 +64,7 @@ export function DataTable<TData, TValue>({
                 }
                 className="max-w-sm"
             />
-            {onClickReorder && data.length > 1 && (
+            {onClickReorder && data.length > 1 && !pathName.split('/')[2] && (
                 <Button onClick={onClickReorder}>
                     Reordenar
                 </Button>
