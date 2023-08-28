@@ -40,7 +40,8 @@ export async function PATCH(
             maxQtdItems,
             status,
             productIds,
-            additionalItemsIds
+            additionalItemsIds,
+            isRequired
         } = body;
 
         if (!params.additionalItemCategoryId) {
@@ -62,6 +63,10 @@ export async function PATCH(
 
         if (!name) {
             return new NextResponse("Name is required", { status: 400 })
+        }
+
+        if (typeof isRequired !== 'boolean') {
+            return new NextResponse("isRequired invalid", { status: 400 })
         }
 
         // if (!description) {
@@ -150,6 +155,7 @@ export async function PATCH(
                 description,
                 maxQtdItems,
                 status,
+                isRequired,
                 additionalItemsIds: {
                     set: additionalItemsIds
                 },

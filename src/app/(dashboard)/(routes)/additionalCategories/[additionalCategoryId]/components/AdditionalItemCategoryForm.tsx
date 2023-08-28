@@ -33,6 +33,7 @@ const formSchema = z.object({
     status: z.boolean().default(true),
     productIds: z.string().array(),
     additionalItemsIds: z.string().array(),
+    isRequired: z.boolean().default(false),
 })
 
 type AdditionalItemCategoryFormValues = z.infer<typeof formSchema>;
@@ -71,6 +72,7 @@ const AdditionalItemCategoryForm: React.FC<AdditionalItemCategoryFormProps> = ({
             productIds: [],
             additionalItemsIds: [],
             status: true,
+            isRequired: false,
         },
     })
 
@@ -247,6 +249,28 @@ const AdditionalItemCategoryForm: React.FC<AdditionalItemCategoryFormProps> = ({
                                 </FormItem>
                             )}
                         />
+                        <FormField 
+                                control={form.control}
+                                name="isRequired"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>É obrigatório?</FormLabel>
+                                        <FormControl>
+                                            <div className="flex items-center gap-6 pt-2">
+                                                <Switch
+                                                    disabled={isLoading}
+                                                    checked={field.value}
+                                                    onCheckedChange={field.onChange}
+                                                />
+                                                <Label>
+                                                    {field.value ? 'Sim' : 'Não'}
+                                                </Label>
+                                            </div>
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
                         {initialDate && (
                             <FormField 
                                 control={form.control}

@@ -45,7 +45,8 @@ export async function POST(
             maxQtdItems,
             status,
             productIds,
-            additionalItemsIds
+            additionalItemsIds,
+            isRequired
         } = body;
 
         if (!maxQtdItems) {
@@ -54,6 +55,10 @@ export async function POST(
 
         if (!name) {
             return new NextResponse("Name is required", { status: 400 })
+        }
+
+        if (typeof isRequired !== 'boolean') {
+            return new NextResponse("isRequired invalid", { status: 400 })
         }
 
         // if (!description) {
@@ -72,6 +77,7 @@ export async function POST(
                 description,
                 maxQtdItems,
                 status,
+                isRequired,
                 order: lastAdditionalItemCategory ? (lastAdditionalItemCategory?.order + 1) : 0,
                 productIds: {
                     set: productIds
