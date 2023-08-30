@@ -34,10 +34,8 @@ const formSchema = z.object({
     colorDetails: z.string().min(3, {
         message: "Insira pelo menos três caracteres"
     }),
-    deliveryDistance: z.coerce.number().int({
-        message: "A distância de entrega precisa ser número inteiro",
-    }).min(4, {
-        message: `A distância de entrega mínima é de 4km`
+    deliveryDistance: z.coerce.number().min(0.5, {
+        message: `A distância de entrega mínima é de 0.5km`
     }).max(7, {
         message: `A distância de entrega máxima é de 7km`
     }),

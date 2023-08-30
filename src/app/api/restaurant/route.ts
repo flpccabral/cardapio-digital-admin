@@ -107,7 +107,7 @@ export async function PATCH(
             return new NextResponse("Email is required", { status: 400 })
         }
 
-        if (!deliveryDistance || deliveryDistance < 4 || deliveryDistance > 7 ) {
+        if (!deliveryDistance || deliveryDistance < 0.5 || deliveryDistance > 7 ) {
             return new NextResponse("delivery Distance invalid", { status: 400 })
         }
 

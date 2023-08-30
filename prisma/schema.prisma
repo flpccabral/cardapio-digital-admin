@@ -29,7 +29,7 @@ model Restaurant {
   email         String      @default("teste123@gmail.com")
   colorHeader   String      @default("fff")
   colorDetails  String      @default("fff")
-  deliveryDistance  Int     @default(5)
+  deliveryDistance  Float     @default(5)
   address       Address?
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
