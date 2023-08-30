@@ -33,6 +33,7 @@ export async function POST(
             email,
             colorHeader,
             colorDetails,
+            deliveryDistance,
             address,
         } = body;
         
@@ -79,6 +80,7 @@ export async function PATCH(
             whatsapp,
             email,
             logo,
+            deliveryDistance,
             colorDetails,
             colorHeader,
             address: {
@@ -103,6 +105,10 @@ export async function PATCH(
 
         if (!email) {
             return new NextResponse("Email is required", { status: 400 })
+        }
+
+        if (!deliveryDistance || deliveryDistance < 4 || deliveryDistance > 7 ) {
+            return new NextResponse("delivery Distance invalid", { status: 400 })
         }
 
         if (!colorDetails) {
@@ -148,6 +154,7 @@ export async function PATCH(
                 logo,
                 phone,
                 whatsapp,
+                deliveryDistance,
                 colorDetails,
                 colorHeader,
                 email,

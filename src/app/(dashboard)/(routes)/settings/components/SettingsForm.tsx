@@ -34,6 +34,13 @@ const formSchema = z.object({
     colorDetails: z.string().min(3, {
         message: "Insira pelo menos três caracteres"
     }),
+    deliveryDistance: z.coerce.number().int({
+        message: "A distância de entrega precisa ser número inteiro",
+    }).min(4, {
+        message: `A distância de entrega mínima é de 4km`
+    }).max(7, {
+        message: `A distância de entrega máxima é de 7km`
+    }),
     address: z.object({
         streetAddress: z.string().min(1, {
             message: "Preenche o endereço"
@@ -106,6 +113,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
             logo: "",
             colorDetails: "",
             colorHeader: "",
+            deliveryDistance: undefined,
             address: {
                 streetAddress: "",
                 number: undefined,
@@ -280,6 +288,26 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
                                 </FormItem>
                             )}
                         />
+                        <FormField 
+                            control={form.control}
+                            name="deliveryDistance"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Distância de entrega em km</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            error={form.formState.errors.deliveryDistance}
+                                            type="number"
+                                            disabled={isLoading}
+                                            placeholder="ex: 5"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        
                         <FormField 
                             control={form.control}
                             name="colorHeader"
